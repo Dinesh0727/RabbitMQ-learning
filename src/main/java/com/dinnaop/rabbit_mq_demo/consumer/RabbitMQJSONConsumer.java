@@ -13,7 +13,12 @@ public class RabbitMQJSONConsumer {
     private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQJSONConsumer.class);
 
     @RabbitListener(queues = { "${rabbitmq.demo.queueName.json}" })
-    public void consumeJSONMessage(User user) {
-        LOGGER.info(String.format("Received JSON Message -> %s", user.toString()));
+    public void consumeJSONMessage(User user) throws Exception {
+        try {
+            Thread.sleep(3000);
+            LOGGER.info(String.format("Received JSON Message -> %s", user.toString()));
+        } catch (Exception e) {
+            throw new Exception("Threw exception when consuming the messages");
+        }
     }
 }
