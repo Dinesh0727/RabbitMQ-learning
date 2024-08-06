@@ -31,21 +31,22 @@ public class RabbitMQJSONProducer {
     List<User> users = new ArrayList<>();
 
     public void sendJSONMessage(User user) throws Exception {
-        User user2 = new User(2, "Dinesh", "Tummalapalli");
-        User user3 = new User(3, "Dinesh", "Tummalapalli");
 
         users.add(user);
-        users.add(user2);
-        users.add(user3);
 
-        LOGGER.info(String.format("JSON Message sent : %s", user.toString()));
+        var iter = users.iterator();
+
         try {
-            for (User x : users) {
-                rabbitTemplate.convertAndSend(exchange, jsonRoutingKey, x);
+            while (iter.hasNext()) {
+                User user123 = iter.next();
+                LOGGER.info(String.format("Sending message: %s", user123));
+                rabbitTemplate.convertAndSend(exchange, jsonRoutingKey, user123);
+                iter.remove();
             }
         } catch (Exception e) {
             throw new Exception("Exception caught while sending the messages to queue");
         }
+
     }
 
 }
